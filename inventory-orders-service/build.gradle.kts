@@ -26,7 +26,7 @@ repositories {
 group = "io.flamingock"
 version = "1.0-SNAPSHOT"
 
-val flamingockVersion = "0.0.44-beta"
+val flamingockVersion = "1.0.0-beta.1"
 logger.lifecycle("Building with flamingock version: $flamingockVersion")
 
 val mongodbVersion = "5.5.1"
