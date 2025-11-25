@@ -26,7 +26,7 @@ repositories {
 group = "io.flamingock"
 version = "1.0-SNAPSHOT"
 
-val flamingockVersion = "1.0.0-beta.3"
+val flamingockVersion = "1.0.0-beta.4"
 logger.lifecycle("Building with flamingock version: $flamingockVersion")
 
 val mongodbVersion = "5.5.1"
@@ -79,8 +79,16 @@ application {
 
 tasks.named<Jar>("jar") {
     manifest {
-        attributes["Main-Class"] = application.mainClass
+        attributes["Main-Class"] = "io.flamingock.examples.inventory.InventoryOrdersApp"
     }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from(sourceSets.main.get().output)
+
+    from({
+        configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
+    })
 }
 
 tasks.withType<JavaCompile> {
