@@ -242,15 +242,41 @@ This example already includes the Flamingock GraalVM integration and resource co
 
 If you copy this example to your own project, make sure you add the same pieces (or follow the docs linked above).
 
-#### 3. Build the fat JAR
+#### 3. Build the fat (uber) JAR
 
-First build the application as usual:
+First build the application as usual, which also creates a **fat / uber JAR** bundling all runtime dependencies and a `Main-Class` manifest entry:
 
 ```bash
 ./gradlew clean build
 ```
 
-This generates a runnable JAR under `build/libs/` (for example `build/libs/inventory-orders-service-1.0-SNAPSHOT.jar`).
+The `jar` task in `build.gradle.kts` is configured like this:
+
+```kotlin
+tasks.named<Jar>("jar") {
+   manifest {
+      attributes["Main-Class"] = "io.flamingock.examples.inventory.InventoryOrdersApp"
+   }
+
+   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+   from(sourceSets.main.get().output)
+
+   from({
+      configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
+   })
+}
+```
+
+This produces an executable uber JAR under `build/libs/` (for example `build/libs/inventory-orders-service-1.0-SNAPSHOT.jar`).
+
+> **Why this matters for GraalVM**
+>
+> GraalVM's `native-image -jar` mode expects a JAR that:
+> - has a valid `Main-Class` manifest attribute, and
+> - contains all the classes and dependencies reachable from that entry point.
+>
+> The fat/uber JAR configuration above ensures those requirements are met, which is essential for the native-image step to work reliably.
 
 #### 4. Create the native image
 
