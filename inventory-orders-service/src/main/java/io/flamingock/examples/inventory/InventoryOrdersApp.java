@@ -16,12 +16,10 @@
 
 package io.flamingock.examples.inventory;
 
-import com.mongodb.client.MongoClient;
 import io.flamingock.api.annotations.EnableFlamingock;
 import io.flamingock.api.annotations.Stage;
 import io.flamingock.community.Flamingock;
 import io.flamingock.community.mongodb.sync.driver.MongoDBSyncAuditStore;
-import io.flamingock.examples.inventory.util.MongoDBUtil;
 import io.flamingock.examples.inventory.util.TargetSystems;
 import io.flamingock.internal.core.store.CommunityAuditStore;
 
@@ -49,8 +47,8 @@ public class InventoryOrdersApp {
 
     //This could return any of the available community audit stores
     private static CommunityAuditStore auditStore() {
-        MongoClient mongoClient = MongoDBUtil.getMongoClient("mongodb://localhost:27017/");
-        return new MongoDBSyncAuditStore(mongoClient, DATABASE_NAME);
+        MongoDBSyncTargetSystem targetSystem = TargetSystems.mongoDBSyncTargetSystem();
+        return MongoDBSyncAuditStore.from(targetSystem);
     }
 
 
