@@ -22,6 +22,7 @@ import io.flamingock.community.Flamingock;
 import io.flamingock.community.mongodb.sync.driver.MongoDBSyncAuditStore;
 import io.flamingock.examples.inventory.util.TargetSystems;
 import io.flamingock.internal.core.store.CommunityAuditStore;
+import io.flamingock.targetystem.mongodb.sync.MongoDBSyncTargetSystem;
 
 import static io.flamingock.examples.inventory.util.TargetSystems.DATABASE_NAME;
 

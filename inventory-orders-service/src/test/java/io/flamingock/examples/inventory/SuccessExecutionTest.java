@@ -149,9 +149,9 @@ public class SuccessExecutionTest {
     static class TestConfig {}
 
     private static void runFlamingockMigrations(MongoClient mongoClient, KafkaSchemaManager schemaManager, LaunchDarklyClient launchDarklyClient) {
-        CommunityAuditStore auditStore = new MongoDBSyncAuditStore(mongoClient, DATABASE_NAME);
-
         MongoDBSyncTargetSystem mongoTarget = new MongoDBSyncTargetSystem(MONGODB_TARGET_SYSTEM, mongoClient, DATABASE_NAME);
+        CommunityAuditStore auditStore = MongoDBSyncAuditStore.from(mongoTarget);
+
         NonTransactionalTargetSystem kafkaTarget = new NonTransactionalTargetSystem(KAFKA_TARGET_SYSTEM).addDependency(schemaManager);
         NonTransactionalTargetSystem flagTarget = new NonTransactionalTargetSystem(FEATURE_FLAG_TARGET_SYSTEM).addDependency(launchDarklyClient);
 
