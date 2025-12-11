@@ -1,4 +1,1 @@
-java=17.0.2-open
-
-# Optional: uncomment to use a GraalVM distribution when working with native images
-# java=17.0.8-graal
+java=17.0.8-graal

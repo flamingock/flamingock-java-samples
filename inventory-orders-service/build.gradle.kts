@@ -42,7 +42,7 @@ dependencies {
     // Optional: enable GraalVM native image support for Flamingock
     // See: https://docs.flamingock.io/frameworks/graalvm
     // Uncomment
-     implementation("io.flamingock:flamingock-graalvm:$flamingockVersion")
+    // implementation("io.flamingock:flamingock-graalvm:$flamingockVersion")
     annotationProcessor("io.flamingock:flamingock-processor:$flamingockVersion")
 
 //    MongoDB dependencies

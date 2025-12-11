@@ -9,15 +9,15 @@ ___
 
 This example simulates an **e-commerce service** that manages inventory and orders. It demonstrates how Flamingock coordinates multiple target systems in lockstep using the **Change-as-Code** approach.
 
-The story begins when the **marketing team** launches a promotional campaign that requires support for **discount codes**.  
+The story begins when the **marketing team** launches a promotional campaign that requires support for **discount codes**.
 To implement this feature safely, the product and engineering teams plan a sequence of deployments, each introducing incremental changes in a controlled, auditable way.
 
-As development progresses, the **sales team** also requests the ability to quickly search and report on orders by discount code.  
+As development progresses, the **sales team** also requests the ability to quickly search and report on orders by discount code.
 This leads the engineers to add an index on the new field as part of the rollout, ensuring the system remains both functional and performant.
 
 ### Lifecycle of the feature rollout
 
-1. **Initial deployment**  <a id="initial-deployment"></a>  
+1. **Initial deployment**  <a id="initial-deployment"></a>
    *Business driver:* prepare the system for discounts while keeping the feature hidden.
    - Add the `discountCode` field to the `orders` collection in **MongoDB**.
    - Update the `OrderCreated` schema in **Kafka** to include the same field.
@@ -28,7 +28,7 @@ This leads the engineers to add an index on the new field as part of the rollout
       - [`UpdateOrderCreatedSchema`](#updateordercreatedschema)
       - [`AddFeatureFlagDiscounts`](#addfeatureflagdiscounts)
 
-2. **Second deployment** <a id="second-deployment"></a>  
+2. **Second deployment** <a id="second-deployment"></a>
    *Business driver:* ensure existing and new orders remain consistent.
    - Backfill existing orders with a default `discountCode` (e.g. `"NONE"`).
    - Application logic begins to populate the field for new orders, still hidden behind the flag.
@@ -37,7 +37,7 @@ This leads the engineers to add an index on the new field as part of the rollout
       - [`BackfillDiscountsForExistingOrders`](#backfilldiscountsforexistingorders)
       - [`AddIndexOnDiscountCode`](#addindexondiscountcode)
 
-3. **Runtime activation (no deployment)** <a id="runtime-activation"></a>  
+3. **Runtime activation (no deployment)** <a id="runtime-activation"></a>
    *Business driver:* marketing activates discounts for customers.
    - The feature flag is enabled at runtime using a feature-flag tool (e.g. Unleash, LaunchDarkly).
    - No redeployment is required — the system is already prepared.
@@ -226,16 +226,16 @@ Using SDKMAN:
 
 ```bash
 sdk env install   # uses .sdkmanrc in this folder
-sdk use java 22.0.2-graalce  # or any installed GraalVM distribution compatible with your setup
+sdk use java 17.0.8-graal  # or any installed GraalVM distribution compatible with your setup
 ```
 
-The default `.sdkmanrc` keeps Java 17, but includes a commented example GraalVM version you can enable.
+The default `.sdkmanrc` included with this example already uses Java 17 with GraalVM.
 
 #### 2. Ensure GraalVM support dependencies are present
 
 This example already includes the Flamingock GraalVM integration and resource configuration:
 
-- `build.gradle.kts` contains:
+- `build.gradle.kts` contains (commented):
    - `implementation("io.flamingock:flamingock-graalvm:$flamingockVersion")`
 - `resource-config.json` in the project root includes:
    - `META-INF/flamingock/metadata.json` resources required at native-image time
@@ -364,15 +364,15 @@ This example demonstrates the following Flamingock capabilities:
 ## Implemented Changes
 
 
-| Deployment Step                | Change Name                                                                         | Target Systems        | Operation                         | Description                                                                                  |  
-|--------------------------------|-------------------------------------------------------------------------------------|-----------------------|-----------------------------------|----------------------------------------------------------------------------------------------|  
-| [Initial](#initial-deployment) | <a id="adddiscountcodefieldtoorders"></a>`AddDiscountCodeFieldToOrders`             | MongoDB               | Alter collection / add field      | Adds `discountCode` (nullable) to the orders collection                                      |  
-| [Initial](#initial-deployment) | <a id="updateordercreatedschema"></a>`UpdateOrderCreatedSchema`                     | Kafka Schema Registry | Register new schema version       | Publishes a new version of the OrderCreated event schema including discountCode              |  
+| Deployment Step                | Change Name                                                                         | Target Systems        | Operation                         | Description                                                                                  |
+|--------------------------------|-------------------------------------------------------------------------------------|-----------------------|-----------------------------------|----------------------------------------------------------------------------------------------|
+| [Initial](#initial-deployment) | <a id="adddiscountcodefieldtoorders"></a>`AddDiscountCodeFieldToOrders`             | MongoDB               | Alter collection / add field      | Adds `discountCode` (nullable) to the orders collection                                      |
+| [Initial](#initial-deployment) | <a id="updateordercreatedschema"></a>`UpdateOrderCreatedSchema`                     | Kafka Schema Registry | Register new schema version       | Publishes a new version of the OrderCreated event schema including discountCode              |
 | [Initial](#initial-deployment) | <a id="addfeatureflagdiscounts"></a>`AddFeatureFlagDiscounts`                       | LaunchDarkly API       | Create flags                      | Creates feature flags for discount functionality using LaunchDarkly Management API           |
 | [Second](#second-deployment)   | <a id="backfilldiscountsforexistingorders"></a>`BackfillDiscountsForExistingOrders` | MongoDB               | Update                            | Updates existing orders with discountCode = "NONE"                                           |
 | [Second](#second-deployment)   | <a id="addindexondiscountcode"></a>`AddIndexOnDiscountCode`                         | MongoDB               | Create index                      | Creates an index on discountCode to support reporting and efficient lookups                  |
 | [Final](#final-deployment)     | <a id="cleanupfeatureflagdiscounts"></a>`CleanupFeatureFlagDiscounts`               | LaunchDarkly API       | Archive flags                     | Archives temporary feature flags once the feature is permanent and code guards are removed  |
-| [Final](#final-deployment)     | <a id="cleanupoldschemaversion"></a>`CleanupOldSchemaVersion`                       | Kafka Schema Registry | Disable/delete old schema version | Removes outdated schema once all consumers have migrated to the new version                  |  
+| [Final](#final-deployment)     | <a id="cleanupoldschemaversion"></a>`CleanupOldSchemaVersion`                       | Kafka Schema Registry | Disable/delete old schema version | Removes outdated schema once all consumers have migrated to the new version                  |
 
 ## Example Output
 
