@@ -5,6 +5,8 @@ plugins {
     java
     application
     idea
+    id("org.springframework.boot") version "3.2.0"
+    id("io.spring.dependency-management") version "1.1.4"
 }
 
 java {
@@ -39,6 +41,9 @@ dependencies {
 //    Flamingock Dependencies
     implementation(platform("io.flamingock:flamingock-community-bom:$flamingockVersion"))
     implementation("io.flamingock:flamingock-community")
+    implementation("io.flamingock:flamingock-springboot-integration")
+
+
     // Optional: enable GraalVM native image support for Flamingock
     // See: https://docs.flamingock.io/frameworks/graalvm
     // Uncomment
@@ -62,8 +67,11 @@ dependencies {
 //    HTTP client for LaunchDarkly Management API
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
+//    Spring Boot
+    implementation("org.springframework.boot:spring-boot-starter-web")
+
 //    Others dependencies needed for this example
-    implementation("org.slf4j:slf4j-simple:2.0.6")
+//    implementation("org.slf4j:slf4j-simple:2.0.6")  // Commented out - Spring Boot provides logging
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")

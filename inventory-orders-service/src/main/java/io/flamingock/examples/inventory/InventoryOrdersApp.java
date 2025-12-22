@@ -20,12 +20,12 @@ import io.flamingock.api.annotations.EnableFlamingock;
 import io.flamingock.api.annotations.Stage;
 import io.flamingock.community.Flamingock;
 import io.flamingock.community.mongodb.sync.driver.MongoDBSyncAuditStore;
-import io.flamingock.examples.inventory.util.TargetSystems;
 import io.flamingock.internal.core.store.CommunityAuditStore;
 import io.flamingock.targetystem.mongodb.sync.MongoDBSyncTargetSystem;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import static io.flamingock.examples.inventory.util.TargetSystems.DATABASE_NAME;
-
+@SpringBootApplication
 @EnableFlamingock(
         stages = {
                 @Stage(name = "inventory", location = "io.flamingock.examples.inventory.changes")
@@ -35,21 +35,7 @@ public class InventoryOrdersApp {
 
 
     public static void main(String[] args) throws Exception {
-        Flamingock.builder()
-                .setAuditStore(auditStore())
-                .addTargetSystems(
-                        TargetSystems.mongoDBSyncTargetSystem(),
-                        TargetSystems.kafkaTargetSystem(),
-                        TargetSystems.toggleTargetSystem())
-                .build()
-                .run();
-
-    }
-
-    //This could return any of the available community audit stores
-    private static CommunityAuditStore auditStore() {
-        MongoDBSyncTargetSystem targetSystem = TargetSystems.mongoDBSyncTargetSystem();
-        return MongoDBSyncAuditStore.from(targetSystem);
+        SpringApplication.run(InventoryOrdersApp.class, args);
     }
 
 

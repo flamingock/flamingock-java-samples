@@ -28,7 +28,7 @@ import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static io.flamingock.examples.inventory.util.TargetSystems.MONGODB_TARGET_SYSTEM;
+import static io.flamingock.examples.inventory.TargetSystems.MONGODB_TARGET_SYSTEM;
 
 @TargetSystem(id = MONGODB_TARGET_SYSTEM)
 @Change(id = "add-index-on-discount-code", author = "flamingock-team", transactional = true)

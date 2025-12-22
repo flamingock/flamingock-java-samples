@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static io.flamingock.examples.inventory.util.TargetSystems.MONGODB_TARGET_SYSTEM;
+import static io.flamingock.examples.inventory.TargetSystems.MONGODB_TARGET_SYSTEM;
 
 @TargetSystem(id = MONGODB_TARGET_SYSTEM)
 @Change(id = "add-discount-code-field-to-orders", author = "flamingock-team")
