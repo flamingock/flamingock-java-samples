@@ -73,12 +73,16 @@ dependencies {
 //    Others dependencies needed for this example
 //    implementation("org.slf4j:slf4j-simple:2.0.6")  // Commented out - Spring Boot provides logging
 
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.flamingock:flamingock-springboot-test-support:$flamingockVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 
-    testImplementation("org.testcontainers:testcontainers-mongodb:2.0.2")
-    testImplementation("org.testcontainers:testcontainers-kafka:2.0.2")
-    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.2")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:testcontainers:1.21.4")
+    testImplementation("org.testcontainers:mongodb:1.21.4")
+    testImplementation("org.testcontainers:kafka:1.21.4")
+    testImplementation("org.testcontainers:junit-jupiter:1.21.4")
 }
 
 application {
