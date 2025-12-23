@@ -24,7 +24,7 @@ import io.flamingock.examples.inventory.util.LaunchDarklyClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static io.flamingock.examples.inventory.util.TargetSystems.FEATURE_FLAG_TARGET_SYSTEM;
+import static io.flamingock.examples.inventory.TargetSystems.FEATURE_FLAG_TARGET_SYSTEM;
 
 @TargetSystem(id = FEATURE_FLAG_TARGET_SYSTEM)
 @Change(id = "cleanup-feature-flag-discounts", author = "flamingock-team", transactional = false)

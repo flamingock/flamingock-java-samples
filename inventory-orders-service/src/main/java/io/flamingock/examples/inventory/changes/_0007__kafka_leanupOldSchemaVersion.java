@@ -24,7 +24,7 @@ import io.flamingock.examples.inventory.util.KafkaSchemaManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static io.flamingock.examples.inventory.util.TargetSystems.KAFKA_TARGET_SYSTEM;
+import static io.flamingock.examples.inventory.TargetSystems.KAFKA_TARGET_SYSTEM;
 
 @TargetSystem(id =KAFKA_TARGET_SYSTEM)
 @Change(id = "cleanup-old-schema-version", author = "flamingock-team", transactional = false)

@@ -199,7 +199,7 @@ curl http://localhost:8081/subjects/order-created-value/versions
 
 Check the audit logs in MongoDB:
 ```bash
-docker exec -it inventory-mongodb mongosh inventory --eval 'db.flamingockAuditLogs.find().pretty()'
+docker exec -it inventory-mongodb mongosh inventory --eval 'db.flamingockAuditLog.find().pretty()'
 ```
 
 5. **Clean up when done:**
@@ -380,7 +380,7 @@ After running the migrations, you'll see:
 - Orders in MongoDB with discount fields populated
 - Two schema versions in Schema Registry (V1 and V2)
 - LaunchDarkly Management API calls for feature flag creation/archival via mock server
-- Complete audit trail in the flamingockAuditLogs collection
+- Complete audit trail in the flamingockAuditLog collection
 
 ## Architecture Notes
 

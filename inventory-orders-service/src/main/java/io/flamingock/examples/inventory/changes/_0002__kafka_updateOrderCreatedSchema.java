@@ -22,7 +22,7 @@ import io.flamingock.api.annotations.Rollback;
 import io.flamingock.api.annotations.TargetSystem;
 import io.flamingock.examples.inventory.util.KafkaSchemaManager;
 
-import static io.flamingock.examples.inventory.util.TargetSystems.KAFKA_TARGET_SYSTEM;
+import static io.flamingock.examples.inventory.TargetSystems.KAFKA_TARGET_SYSTEM;
 
 @TargetSystem(id =KAFKA_TARGET_SYSTEM)
 @Change(id = "update-order-created-schema", author = "flamingock-team", transactional = false)

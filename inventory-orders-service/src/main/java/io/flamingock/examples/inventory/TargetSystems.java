@@ -1,8 +1,11 @@
-package io.flamingock.examples.inventory.util;
+package io.flamingock.examples.inventory;
 
 import com.mongodb.client.MongoClient;
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
+import io.flamingock.examples.inventory.util.KafkaSchemaManager;
+import io.flamingock.examples.inventory.util.LaunchDarklyClient;
+import io.flamingock.examples.inventory.util.MongoDBUtil;
 import io.flamingock.targetsystem.nontransactional.NonTransactionalTargetSystem;
 import io.flamingock.targetystem.mongodb.sync.MongoDBSyncTargetSystem;
 import org.apache.kafka.clients.admin.AdminClient;

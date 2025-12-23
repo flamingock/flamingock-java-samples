@@ -22,7 +22,7 @@ import io.flamingock.api.annotations.Rollback;
 import io.flamingock.api.annotations.TargetSystem;
 import io.flamingock.examples.inventory.util.LaunchDarklyClient;
 
-import static io.flamingock.examples.inventory.util.TargetSystems.FEATURE_FLAG_TARGET_SYSTEM;
+import static io.flamingock.examples.inventory.TargetSystems.FEATURE_FLAG_TARGET_SYSTEM;
 
 @TargetSystem(id = FEATURE_FLAG_TARGET_SYSTEM)
 @Change(id = "add-feature-flag-discounts", author = "flamingock-team", transactional = false)

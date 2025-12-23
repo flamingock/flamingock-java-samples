@@ -50,10 +50,10 @@ import org.testcontainers.utility.DockerImageName;
 import java.nio.file.Path;
 import java.util.*;
 
-import static io.flamingock.examples.inventory.util.TargetSystems.DATABASE_NAME;
-import static io.flamingock.examples.inventory.util.TargetSystems.KAFKA_TARGET_SYSTEM;
-import static io.flamingock.examples.inventory.util.TargetSystems.MONGODB_TARGET_SYSTEM;
-import static io.flamingock.examples.inventory.util.TargetSystems.FEATURE_FLAG_TARGET_SYSTEM;
+import static io.flamingock.examples.inventory.TargetSystems.DATABASE_NAME;
+import static io.flamingock.examples.inventory.TargetSystems.KAFKA_TARGET_SYSTEM;
+import static io.flamingock.examples.inventory.TargetSystems.MONGODB_TARGET_SYSTEM;
+import static io.flamingock.examples.inventory.TargetSystems.FEATURE_FLAG_TARGET_SYSTEM;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
