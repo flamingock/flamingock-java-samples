@@ -28,7 +28,7 @@ import static io.flamingock.support.domain.AuditEntryDefinition.APPLIED;
 @FlamingockSpringBootTest(classes = InventoryOrdersApp.class)
 @Testcontainers
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class SuccessExecutionTest {
+class InventoryOrdersAppTest {
 
     static final Network network = Network.newNetwork();
 

@@ -74,7 +74,7 @@ dependencies {
 //    implementation("org.slf4j:slf4j-simple:2.0.6")  // Commented out - Spring Boot provides logging
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.flamingock:flamingock-springboot-test-support:$flamingockVersion")
+    testImplementation("io.flamingock:flamingock-springboot-test-support")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 
