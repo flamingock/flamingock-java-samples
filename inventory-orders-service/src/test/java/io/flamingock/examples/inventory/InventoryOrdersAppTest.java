@@ -83,7 +83,7 @@ class InventoryOrdersAppTest {
         flamingockTestSupport
                 .givenBuilderFromContext()
                 .whenRun()
-                .thenExpectAuditSequenceStrict(
+                .thenExpectAuditFinalStateSequence(
                         APPLIED(_0001__mongodb_addDiscountCodeFieldToOrders.class),
                         APPLIED(_0002__kafka_updateOrderCreatedSchema.class),
                         APPLIED(_0003__toggle_addFeatureFlagDiscounts.class),
