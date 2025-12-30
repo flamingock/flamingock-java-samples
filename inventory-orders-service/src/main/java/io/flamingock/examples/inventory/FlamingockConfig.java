@@ -3,7 +3,7 @@ package io.flamingock.examples.inventory;
 import com.mongodb.client.MongoClient;
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
-import io.flamingock.community.mongodb.sync.driver.MongoDBSyncAuditStore;
+import io.flamingock.store.mongodb.sync.MongoDBSyncAuditStore;
 import io.flamingock.examples.inventory.util.KafkaSchemaManager;
 import io.flamingock.examples.inventory.util.LaunchDarklyClient;
 import io.flamingock.examples.inventory.util.MongoDBUtil;
