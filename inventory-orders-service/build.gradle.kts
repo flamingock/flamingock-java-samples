@@ -1,12 +1,16 @@
-import java.net.URL
-import javax.xml.parsers.DocumentBuilderFactory
-
 plugins {
     java
     application
     idea
     id("org.springframework.boot") version "3.2.0"
     id("io.spring.dependency-management") version "1.1.4"
+    id("io.flamingock") version "1.0.0-beta.7"
+}
+
+flamingock {
+    community()
+    springboot()
+//    graalvm() // See: https://docs.flamingock.io/frameworks/graalvm
 }
 
 java {
@@ -16,6 +20,7 @@ java {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
+
 
 repositories {
     mavenLocal()
@@ -28,7 +33,7 @@ repositories {
 group = "io.flamingock"
 version = "1.0-SNAPSHOT"
 
-val flamingockVersion = "1.0.0-beta.7"
+val flamingockVersion = "1.0.0-beta.8"
 logger.lifecycle("Building with flamingock version: $flamingockVersion")
 
 val mongodbVersion = "5.5.1"
@@ -38,18 +43,6 @@ val confluentVersion = "7.5.0"
 val snakeyamlVersion = "2.2"
 
 dependencies {
-//    Flamingock Dependencies
-    implementation(platform("io.flamingock:flamingock-community-bom:$flamingockVersion"))
-    implementation("io.flamingock:flamingock-community")
-    implementation("io.flamingock:flamingock-springboot-integration")
-
-
-    // Optional: enable GraalVM native image support for Flamingock
-    // See: https://docs.flamingock.io/frameworks/graalvm
-    // Uncomment
-    // implementation("io.flamingock:flamingock-graalvm:$flamingockVersion")
-    annotationProcessor("io.flamingock:flamingock-processor:$flamingockVersion")
-
 //    MongoDB dependencies
     implementation("org.mongodb:mongodb-driver-sync:$mongodbVersion")
     implementation("org.mongodb:mongodb-driver-core:$mongodbVersion")
@@ -74,7 +67,6 @@ dependencies {
 //    implementation("org.slf4j:slf4j-simple:2.0.6")  // Commented out - Spring Boot provides logging
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.flamingock:flamingock-springboot-test-support")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 
