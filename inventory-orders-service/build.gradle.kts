@@ -2,11 +2,11 @@ plugins {
     java
     application
     idea
-    id("org.springframework.boot") version "3.2.0"
-    id("io.spring.dependency-management") version "1.1.4"
-    id("io.flamingock") version "1.0.0-rc.1"
+    id("org.springframework.boot") version "4.0.1"
+    id("io.spring.dependency-management") version "1.1.7"
+    id("io.flamingock") version "1.0.0"
 }
-logger.lifecycle("Building with flamingock version: 1.0.0-rc.1")
+logger.lifecycle("Building with flamingock version: 1.0.0")
 
 flamingock {
     community()
@@ -36,9 +36,9 @@ version = "1.0-SNAPSHOT"
 
 
 val mongodbVersion = "5.5.1"
-val kafkaVersion = "3.7.0"
-val avroVersion = "1.11.3"
-val confluentVersion = "7.5.0"
+val kafkaVersion = "3.9.1"
+val avroVersion = "1.11.4"
+val confluentVersion = "7.5.12"
 val snakeyamlVersion = "2.2"
 
 dependencies {
@@ -66,14 +66,11 @@ dependencies {
 //    implementation("org.slf4j:slf4j-simple:2.0.6")  // Commented out - Spring Boot provides logging
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
-
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:testcontainers:1.21.4")
-    testImplementation("org.testcontainers:mongodb:1.21.4")
-    testImplementation("org.testcontainers:kafka:1.21.4")
-    testImplementation("org.testcontainers:junit-jupiter:1.21.4")
+    testImplementation("org.testcontainers:testcontainers:2.0.2")
+    testImplementation("org.testcontainers:testcontainers-mongodb:2.0.2")
+    testImplementation("org.testcontainers:testcontainers-kafka:2.0.2")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.2")
 }
 
 application {
