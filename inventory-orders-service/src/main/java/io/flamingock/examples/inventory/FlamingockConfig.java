@@ -1,15 +1,13 @@
 package io.flamingock.examples.inventory;
 
-import com.mongodb.client.MongoClient;
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import io.flamingock.internal.core.external.store.CommunityAuditStore;
 import io.flamingock.store.mongodb.sync.MongoDBSyncAuditStore;
 import io.flamingock.examples.inventory.util.KafkaSchemaManager;
 import io.flamingock.examples.inventory.util.LaunchDarklyClient;
-import io.flamingock.examples.inventory.util.MongoDBUtil;
+import io.flamingock.targetsystem.mongodb.springdata.MongoDBSpringDataTargetSystem;
 import io.flamingock.targetsystem.nontransactional.NonTransactionalTargetSystem;
-import io.flamingock.targetsystem.mongodb.sync.MongoDBSyncTargetSystem;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,15 +15,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.PreDestroy;
+import org.springframework.data.mongodb.core.MongoTemplate;
+
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
 @Configuration
 public class FlamingockConfig {
-
-    @Value("${mongodb.uri:mongodb://localhost:27017/}")
-    private String mongodbUri;
 
     @Value("${kafka.bootstrap-servers:localhost:9092}")
     private String kafkaBootstrapServers;
@@ -38,14 +35,9 @@ public class FlamingockConfig {
 
     private AdminClient kafkaAdminClient;
 
-    @Bean(destroyMethod = "close")
-    public MongoClient mongoClient() {
-        return MongoDBUtil.getMongoClient(mongodbUri);
-    }
-
     @Bean
-    public MongoDBSyncTargetSystem mongoDBSyncTargetSystem(MongoClient mongoClient) {
-        return new MongoDBSyncTargetSystem(TargetSystems.MONGODB_TARGET_SYSTEM, mongoClient, TargetSystems.DATABASE_NAME);
+    public MongoDBSpringDataTargetSystem mongoDBSpringDataTargetSystem(MongoTemplate mongoTemplate) {
+        return new MongoDBSpringDataTargetSystem(TargetSystems.MONGODB_TARGET_SYSTEM, mongoTemplate);
     }
 
     @Bean
@@ -78,8 +70,8 @@ public class FlamingockConfig {
 
     //This could return any of the available community audit stores
     @Bean
-    public CommunityAuditStore auditStore(MongoDBSyncTargetSystem mongoDBSyncTargetSystem) {
-        return MongoDBSyncAuditStore.from(mongoDBSyncTargetSystem);
+    public CommunityAuditStore auditStore(MongoDBSpringDataTargetSystem mongoDBSpringDataTargetSystem) {
+        return MongoDBSyncAuditStore.from(mongoDBSpringDataTargetSystem);
     }
 
     @PreDestroy

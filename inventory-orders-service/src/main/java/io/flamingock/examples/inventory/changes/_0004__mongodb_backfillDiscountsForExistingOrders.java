@@ -17,7 +17,6 @@
 package io.flamingock.examples.inventory.changes;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import io.flamingock.api.annotations.Apply;
@@ -27,6 +26,7 @@ import io.flamingock.api.annotations.TargetSystem;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import static io.flamingock.examples.inventory.TargetSystems.MONGODB_TARGET_SYSTEM;
 
@@ -37,10 +37,10 @@ public class _0004__mongodb_backfillDiscountsForExistingOrders {
     private static final Logger logger = LoggerFactory.getLogger(_0004__mongodb_backfillDiscountsForExistingOrders.class);
 
     @Apply
-    public void apply(MongoDatabase mongoDatabase) {
+    public void apply(MongoTemplate mongoTemplate) {
         logger.info("Backfilling discountCode field for existing orders");
 
-        MongoCollection<Document> orders = mongoDatabase.getCollection("orders");
+        MongoCollection<Document> orders = mongoTemplate.getCollection("orders");
 
         // Update all orders that don't have a discountCode field
         var filter = Filters.exists("discountCode", false);
@@ -60,10 +60,10 @@ public class _0004__mongodb_backfillDiscountsForExistingOrders {
     }
 
     @Rollback
-    public void rollback(MongoDatabase mongoDatabase) {
+    public void rollback(MongoTemplate mongoTemplate) {
         logger.info("Rolling back: Removing discountCode and discountApplied fields");
 
-        MongoCollection<Document> orders = mongoDatabase.getCollection("orders");
+        MongoCollection<Document> orders = mongoTemplate.getCollection("orders");
 
         // Remove the discountCode field from all documents
         orders.updateMany(

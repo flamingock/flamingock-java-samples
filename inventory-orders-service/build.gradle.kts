@@ -62,6 +62,9 @@ dependencies {
 //    Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
 
+//    Springdata for MongoDB dependency
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+
 //    Others dependencies needed for this example
 //    implementation("org.slf4j:slf4j-simple:2.0.6")  // Commented out - Spring Boot provides logging
 
@@ -89,6 +92,10 @@ tasks.named<Jar>("jar") {
     from({
         configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
     })
+}
+
+tasks.jar {
+    isZip64 = true
 }
 
 tasks.withType<JavaCompile> {

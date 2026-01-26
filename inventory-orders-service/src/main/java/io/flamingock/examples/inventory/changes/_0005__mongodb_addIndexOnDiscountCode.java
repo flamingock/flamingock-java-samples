@@ -17,7 +17,6 @@
 package io.flamingock.examples.inventory.changes;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import io.flamingock.api.annotations.Apply;
@@ -27,11 +26,12 @@ import io.flamingock.api.annotations.TargetSystem;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import static io.flamingock.examples.inventory.TargetSystems.MONGODB_TARGET_SYSTEM;
 
 @TargetSystem(id = MONGODB_TARGET_SYSTEM)
-@Change(id = "add-index-on-discount-code", author = "flamingock-team", transactional = true)
+@Change(id = "add-index-on-discount-code", author = "flamingock-team", transactional = false)
 
 public class _0005__mongodb_addIndexOnDiscountCode {
 
@@ -41,10 +41,10 @@ public class _0005__mongodb_addIndexOnDiscountCode {
     private static final String ORDERS_COLLECTION = "orders";
 
     @Apply
-    public void apply(MongoDatabase mongoDatabase) {
+    public void apply(MongoTemplate mongoTemplate) {
         logger.info("Creating index on discountCode field for efficient reporting queries");
 
-        MongoCollection<Document> orders = mongoDatabase.getCollection(ORDERS_COLLECTION);
+        MongoCollection<Document> orders = mongoTemplate.getCollection(ORDERS_COLLECTION);
 
         // Check if index already exists (idempotent operation)
         boolean indexExists = orders.listIndexes()
@@ -66,10 +66,10 @@ public class _0005__mongodb_addIndexOnDiscountCode {
     }
 
     @Rollback
-    public void rollback(MongoDatabase mongoDatabase) {
+    public void rollback(MongoTemplate mongoTemplate) {
         logger.info("Rolling back: Dropping index on discountCode field");
 
-        MongoCollection<Document> orders = mongoDatabase.getCollection(ORDERS_COLLECTION);
+        MongoCollection<Document> orders = mongoTemplate.getCollection(ORDERS_COLLECTION);
 
         try {
             // Check if index exists before attempting to drop it
