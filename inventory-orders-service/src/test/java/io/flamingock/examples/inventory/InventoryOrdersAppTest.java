@@ -66,7 +66,7 @@ class InventoryOrdersAppTest {
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("mongodb.uri", mongoDBContainer::getConnectionString);
+        registry.add("spring.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
         registry.add("kafka.bootstrap-servers", kafkaContainer::getBootstrapServers);
         registry.add("kafka.schema-registry-url", () -> String.format("http://%s:%d",
                 schemaRegistryContainer.getHost(),

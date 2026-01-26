@@ -16,12 +16,12 @@
 
 package io.flamingock.examples.inventory.changes;
 
-import com.mongodb.client.MongoDatabase;
 import io.flamingock.api.annotations.Apply;
 import io.flamingock.api.annotations.Change;
 import io.flamingock.api.annotations.Rollback;
 import io.flamingock.api.annotations.TargetSystem;
 import org.bson.Document;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -36,26 +36,22 @@ public class _0001__mongodb_addDiscountCodeFieldToOrders {
     private static final String ORDERS_COLLECTION_NAME = "orders";
 
     @Apply
-    public void apply(MongoDatabase mongoDatabase) {
+    public void apply(MongoTemplate mongoTemplate) {
         Document order1 = buildOrder1();
         Document order2 = buildOrder2();
-        mongoDatabase
+        mongoTemplate
                 .getCollection(ORDERS_COLLECTION_NAME)
                 .insertMany(Arrays.asList(order1, order2));
 
     }
 
     @Rollback
-    public void rollback(MongoDatabase mongoDatabase) {
-        if(doesExistOrdersCollection(mongoDatabase)) {
-            mongoDatabase.getCollection(ORDERS_COLLECTION_NAME).drop();
+    public void rollback(MongoTemplate mongoTemplate) {
+        if(mongoTemplate.collectionExists(ORDERS_COLLECTION_NAME)) {
+            mongoTemplate.dropCollection(ORDERS_COLLECTION_NAME);
         }
     }
 
-
-    private boolean doesExistOrdersCollection(MongoDatabase mongoDatabase) {
-        return mongoDatabase.listCollectionNames().into(new java.util.ArrayList<>()).contains("orders");
-    }
 
     private static Document buildOrder2() {
         return new Document()
