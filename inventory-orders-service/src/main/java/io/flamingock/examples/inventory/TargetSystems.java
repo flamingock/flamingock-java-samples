@@ -7,7 +7,7 @@ import io.flamingock.examples.inventory.util.KafkaSchemaManager;
 import io.flamingock.examples.inventory.util.LaunchDarklyClient;
 import io.flamingock.examples.inventory.util.MongoDBUtil;
 import io.flamingock.targetsystem.nontransactional.NonTransactionalTargetSystem;
-import io.flamingock.targetystem.mongodb.sync.MongoDBSyncTargetSystem;
+import io.flamingock.targetsystem.mongodb.sync.MongoDBSyncTargetSystem;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 
