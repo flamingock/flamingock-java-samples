@@ -1,4 +1,4 @@
-package com.example.flags.config;
+package io.flamingock.flags.config;
 
 import io.flamingock.internal.core.external.store.CommunityAuditStore;
 import io.flamingock.store.sql.SqlAuditStore;

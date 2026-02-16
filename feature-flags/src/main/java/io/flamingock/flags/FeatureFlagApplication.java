@@ -1,4 +1,4 @@
-package com.example.flags;
+package io.flamingock.flags;
 
 import io.flamingock.api.annotations.EnableFlamingock;
 import io.flamingock.api.annotations.Stage;
@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @EnableFlamingock(
-        stages = @Stage(name = "flags", location = "com.example.flags.changes")
+        stages = @Stage(location = "com.flamingock.flags.changes")
 )
 public class FeatureFlagApplication {
 

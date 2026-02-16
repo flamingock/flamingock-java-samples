@@ -1,6 +1,6 @@
-package com.example.flags.repository;
+package io.flamingock.flags.repository;
 
-import com.example.flags.model.TargetingRule;
+import io.flamingock.flags.model.TargetingRule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

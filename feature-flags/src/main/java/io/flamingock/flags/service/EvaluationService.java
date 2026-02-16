@@ -1,9 +1,9 @@
-package com.example.flags.service;
+package io.flamingock.flags.service;
 
-import com.example.flags.model.FeatureFlag;
-import com.example.flags.model.TargetingRule;
-import com.example.flags.repository.FlagRepository;
-import com.example.flags.repository.TargetingRuleRepository;
+import io.flamingock.flags.model.FeatureFlag;
+import io.flamingock.flags.model.TargetingRule;
+import io.flamingock.flags.repository.FlagRepository;
+import io.flamingock.flags.repository.TargetingRuleRepository;
 import org.springframework.stereotype.Service;
 
 import java.nio.ByteBuffer;

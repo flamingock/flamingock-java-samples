@@ -1,4 +1,4 @@
-package com.example.flags.model;
+package io.flamingock.flags.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,10 +1,10 @@
-package com.example.flags.controller;
+package io.flamingock.flags.controller;
 
-import com.example.flags.model.FeatureFlag;
-import com.example.flags.model.TargetingRule;
-import com.example.flags.repository.FlagRepository;
-import com.example.flags.repository.TargetingRuleRepository;
-import com.example.flags.service.EvaluationService;
+import io.flamingock.flags.model.FeatureFlag;
+import io.flamingock.flags.model.TargetingRule;
+import io.flamingock.flags.repository.FlagRepository;
+import io.flamingock.flags.repository.TargetingRuleRepository;
+import io.flamingock.flags.service.EvaluationService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

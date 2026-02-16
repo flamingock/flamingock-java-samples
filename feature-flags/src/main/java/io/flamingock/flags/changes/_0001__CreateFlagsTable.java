@@ -1,4 +1,4 @@
-package com.example.flags.changes;
+package io.flamingock.flags.changes;
 
 import io.flamingock.api.annotations.Apply;
 import io.flamingock.api.annotations.Change;
