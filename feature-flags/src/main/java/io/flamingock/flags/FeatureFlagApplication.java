@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @EnableFlamingock(
-        stages = @Stage(location = "com.flamingock.flags.changes")
+        stages = @Stage(location = "io.flamingock.flags.changes")
 )
 public class FeatureFlagApplication {
 
