@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'feature-flags-example'
+rootProject.name = 'feature-flags'

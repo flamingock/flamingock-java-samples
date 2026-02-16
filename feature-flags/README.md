@@ -103,7 +103,7 @@ Each change targets the `postgres-flags` SQL target system and receives a `java.
 ## Project structure
 
 ```
-feature-flags-example/
+feature-flags/
 ├── docker-compose.yml
 ├── Dockerfile
 ├── build.gradle
