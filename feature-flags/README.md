@@ -108,7 +108,7 @@ feature-flags/
 ├── Dockerfile
 ├── build.gradle
 ├── settings.gradle
-└── src/main/java/com/example/flags/
+└── src/main/java/io/flamingock/flags/
     ├── FeatureFlagApplication.java      # @EnableFlamingock entry point
     ├── config/FlamingockConfig.java      # SqlTargetSystem + audit store beans
     ├── changes/                          # Flamingock migrations
