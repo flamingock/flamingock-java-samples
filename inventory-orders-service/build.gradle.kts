@@ -4,9 +4,9 @@ plugins {
     idea
     id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.7"
-    id("io.flamingock") version "1.0.0"
+    id("io.flamingock") version "1.1.0"
 }
-logger.lifecycle("Building with flamingock version: 1.0.0")
+logger.lifecycle("Building with flamingock version: 1.1.0")
 
 flamingock {
     community()
