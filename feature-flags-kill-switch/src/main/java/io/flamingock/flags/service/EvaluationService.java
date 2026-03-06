@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,14 @@ public class EvaluationService {
 
         if (!flag.isEnabled()) {
             return new EvalResult(false, "flag disabled");
+        }
+
+        Instant now = Instant.now();
+        if (flag.getActivateAt() != null && now.isBefore(flag.getActivateAt())) {
+            return new EvalResult(false, "not yet active");
+        }
+        if (flag.getDeactivateAt() != null && now.isAfter(flag.getDeactivateAt())) {
+            return new EvalResult(false, "schedule expired");
         }
 
         List<TargetingRule> rules = ruleRepository.findByFlagName(flagName);

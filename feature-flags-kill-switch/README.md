@@ -1,8 +1,8 @@
-# Feature Flags with Kill Switch — Flamingock + Spring Boot + PostgreSQL
+# Feature Flags with Kill Switch and Scheduled Activation — Flamingock + Spring Boot + PostgreSQL
 
-A working example that extends the feature-flag service with a **kill switch** and an **audit change log**, using [Flamingock](https://www.flamingock.io) to manage every schema change, Spring Boot for the REST API, and PostgreSQL as the backing store.
+A working example that extends the feature-flag service with a **kill switch** and **scheduled flag activation**, using [Flamingock](https://www.flamingock.io) to manage every schema change, Spring Boot for the REST API, and PostgreSQL as the backing store.
 
-This project builds on the [feature-flags](../feature-flags/readme.md) example. The two new Flamingock changes add the `force_disabled` kill-switch column and the `flag_change_log` audit table.
+This project builds on the [feature-flags](../feature-flags/readme.md) example. The two new Flamingock changes add the `force_disabled` kill-switch column and the `activate_at`/`deactivate_at` scheduling columns.
 
 ## Prerequisites
 
@@ -48,7 +48,7 @@ curl -s localhost:8080/flags
 ```bash
 curl -s -X PUT localhost:8080/flags/dark-mode \
   -H "Content-Type: application/json" \
-  -d '{"enabled":true,"rolloutPercentage":30,"changedBy":"alice"}'
+  -d '{"enabled":true,"rolloutPercentage":30}'
 ```
 
 ### Evaluate a flag for a user
@@ -86,26 +86,28 @@ curl -s localhost:8080/flags/dark-mode/rules
 ```bash
 curl -s -X PUT localhost:8080/flags/dark-mode \
   -H "Content-Type: application/json" \
-  -d '{"forceDisabled":true,"changedBy":"ops-team"}'
+  -d '{"forceDisabled":true}'
 ```
 
-Once the kill switch is on, the flag evaluates to `false` for every user — targeting rules and rollout percentage are bypassed entirely. The reason returned is `"kill switch active"`.
+Once the kill switch is on, the flag evaluates to `false` for every user — targeting rules, rollout percentage, and scheduling are all bypassed. The reason returned is `"kill switch active"`.
 
 ### Deactivate the kill switch
 
 ```bash
 curl -s -X PUT localhost:8080/flags/dark-mode \
   -H "Content-Type: application/json" \
-  -d '{"forceDisabled":false,"changedBy":"ops-team"}'
+  -d '{"forceDisabled":false}'
 ```
 
-### View the audit log for a flag
+### Schedule a flag
 
 ```bash
-curl -s localhost:8080/flags/dark-mode/log
+curl -s -X PUT localhost:8080/flags/dark-mode \
+  -H "Content-Type: application/json" \
+  -d '{"enabled":true,"activateAt":"2025-11-28T00:00:00Z","deactivateAt":"2025-11-29T00:00:00Z"}'
 ```
 
-Every change to `enabled`, `rolloutPercentage`, or `forceDisabled` is recorded with the actor (`changedBy`) and a human-readable detail string.
+The flag will evaluate to `false` before `activateAt` (`"not yet active"`) and after `deactivateAt` (`"schedule expired"`). During the window, normal evaluation applies.
 
 ## How Flamingock manages the schema
 
@@ -117,7 +119,7 @@ Instead of `ddl-auto` or hand-written SQL scripts, Flamingock applies versioned,
 | `_0002__AddRolloutPercentage` | Adds the `rollout_percentage` column |
 | `_0003__CreateTargetingRules` | Creates the `targeting_rules` table + index |
 | `_0004__AddKillSwitch` | Adds the `force_disabled` column to `feature_flags` |
-| `_0005__CreateFlagChangeLog` | Creates the `flag_change_log` audit table + index |
+| `_0005__AddScheduledActivation` | Adds the `activate_at` and `deactivate_at` columns |
 
 Each change targets the `postgres-flags` SQL target system and receives a `java.sql.Connection` automatically. Flamingock tracks execution in its audit store so changes run exactly once, even across restarts.
 
@@ -127,18 +129,10 @@ Flags are evaluated in priority order:
 
 1. **Kill switch** — if `force_disabled` is `true`, returns `false` immediately.
 2. **Disabled** — if `enabled` is `false`, returns `false`.
-3. **Targeting rules** — if any rule matches the user's attributes, returns `true`.
-4. **Rollout bucket** — deterministic SHA-256 hash of `flagName:userId` maps the user to a 0–99 bucket; returns `true` if the bucket is below `rolloutPercentage`.
-
-## Audit log actions
-
-| Action | Triggered when |
-|--------|---------------|
-| `ENABLED` | Flag is turned on |
-| `DISABLED` | Flag is turned off |
-| `ROLLOUT_UPDATED` | Rollout percentage changes |
-| `KILL_SWITCH_ON` | Kill switch activated |
-| `KILL_SWITCH_OFF` | Kill switch deactivated |
+3. **Not yet active** — if `activate_at` is set and now is before it, returns `false`.
+4. **Schedule expired** — if `deactivate_at` is set and now is past it, returns `false`.
+5. **Targeting rules** — if any rule matches the user's attributes, returns `true`.
+6. **Rollout bucket** — deterministic SHA-256 hash of `flagName:userId` maps the user to a 0–99 bucket; returns `true` if the bucket is below `rolloutPercentage`.
 
 ## Targeting rule operators
 
@@ -164,12 +158,11 @@ feature-flags-kill-switch/
     │   ├── _0001__CreateFlagsTable.java
     │   ├── _0002__AddRolloutPercentage.java
     │   ├── _0003__CreateTargetingRules.java
-    │   ├── _0004__AddKillSwitch.java        # NEW: kill switch column
-    │   └── _0005__CreateFlagChangeLog.java  # NEW: audit log table
+    │   ├── _0004__AddKillSwitch.java        # kill switch column
+    │   └── _0005__AddScheduledActivation.java  # scheduled activation columns
     ├── model/                               # JPA entities
     ├── repository/                          # Spring Data repositories
     ├── service/
-    │   ├── EvaluationService.java           # Flag evaluation logic (kill switch aware)
-    │   └── FlagChangeLogService.java        # Audit log recording
+    │   └── EvaluationService.java           # Flag evaluation logic
     └── controller/FlagController.java       # REST API
 ```

@@ -1,12 +1,10 @@
 package io.flamingock.flags.controller;
 
 import io.flamingock.flags.model.FeatureFlag;
-import io.flamingock.flags.model.FlagChangeLog;
 import io.flamingock.flags.model.TargetingRule;
 import io.flamingock.flags.repository.FlagRepository;
 import io.flamingock.flags.repository.TargetingRuleRepository;
 import io.flamingock.flags.service.EvaluationService;
-import io.flamingock.flags.service.FlagChangeLogService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,8 @@ public class FlagController {
     record CreateFlagRequest(String name, String description) {
     }
 
-    record UpdateFlagRequest(Boolean enabled, Integer rolloutPercentage, Boolean forceDisabled, String changedBy) {
+    record UpdateFlagRequest(Boolean enabled, Integer rolloutPercentage, Boolean forceDisabled,
+                             Instant activateAt, Instant deactivateAt) {
     }
 
     record AddRuleRequest(String attribute, String operator, String value) {
@@ -36,16 +36,13 @@ public class FlagController {
     private final FlagRepository repository;
     private final TargetingRuleRepository ruleRepository;
     private final EvaluationService evaluationService;
-    private final FlagChangeLogService changeLogService;
 
     public FlagController(FlagRepository repository,
                           TargetingRuleRepository ruleRepository,
-                          EvaluationService evaluationService,
-                          FlagChangeLogService changeLogService) {
+                          EvaluationService evaluationService) {
         this.repository = repository;
         this.ruleRepository = ruleRepository;
         this.evaluationService = evaluationService;
-        this.changeLogService = changeLogService;
     }
 
     @PostMapping
@@ -63,25 +60,11 @@ public class FlagController {
             @PathVariable String name,
             @RequestBody UpdateFlagRequest req) {
         FeatureFlag flag = repository.findById(name).orElseThrow();
-        String by = req.changedBy() != null ? req.changedBy() : "system";
-
-        if (req.enabled() != null && req.enabled() != flag.isEnabled()) {
-            String detail = flag.isEnabled() + " → " + req.enabled();
-            flag.setEnabled(req.enabled());
-            changeLogService.record(name, by, req.enabled() ? "ENABLED" : "DISABLED", detail);
-        }
-        if (req.rolloutPercentage() != null && !req.rolloutPercentage().equals(flag.getRolloutPercentage())) {
-            String detail = flag.getRolloutPercentage() + "% → " + req.rolloutPercentage() + "%";
-            flag.setRolloutPercentage(req.rolloutPercentage());
-            changeLogService.record(name, by, "ROLLOUT_UPDATED", detail);
-        }
-        if (req.forceDisabled() != null && req.forceDisabled() != flag.isForceDisabled()) {
-            flag.setForceDisabled(req.forceDisabled());
-            changeLogService.record(name, by,
-                    req.forceDisabled() ? "KILL_SWITCH_ON" : "KILL_SWITCH_OFF",
-                    "kill switch " + (req.forceDisabled() ? "activated" : "deactivated"));
-        }
-
+        if (req.enabled() != null) flag.setEnabled(req.enabled());
+        if (req.rolloutPercentage() != null) flag.setRolloutPercentage(req.rolloutPercentage());
+        if (req.forceDisabled() != null) flag.setForceDisabled(req.forceDisabled());
+        if (req.activateAt() != null) flag.setActivateAt(req.activateAt());
+        if (req.deactivateAt() != null) flag.setDeactivateAt(req.deactivateAt());
         return repository.save(flag);
     }
 
@@ -103,10 +86,5 @@ public class FlagController {
     @GetMapping("/{name}/rules")
     public List<TargetingRule> listRules(@PathVariable String name) {
         return ruleRepository.findByFlagName(name);
-    }
-
-    @GetMapping("/{name}/log")
-    public List<FlagChangeLog> changeLog(@PathVariable String name) {
-        return changeLogService.history(name);
     }
 }

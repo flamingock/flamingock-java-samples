@@ -23,6 +23,12 @@ public class FeatureFlag {
     @Column(name = "force_disabled")
     private boolean forceDisabled = false;
 
+    @Column(name = "activate_at")
+    private Instant activateAt;
+
+    @Column(name = "deactivate_at")
+    private Instant deactivateAt;
+
     @Column(name = "created_at")
     private Instant createdAt;
 
@@ -73,6 +79,24 @@ public class FeatureFlag {
 
     public void setForceDisabled(boolean forceDisabled) {
         this.forceDisabled = forceDisabled;
+        this.updatedAt = Instant.now();
+    }
+
+    public Instant getActivateAt() {
+        return activateAt;
+    }
+
+    public void setActivateAt(Instant activateAt) {
+        this.activateAt = activateAt;
+        this.updatedAt = Instant.now();
+    }
+
+    public Instant getDeactivateAt() {
+        return deactivateAt;
+    }
+
+    public void setDeactivateAt(Instant deactivateAt) {
+        this.deactivateAt = deactivateAt;
         this.updatedAt = Instant.now();
     }
 
